@@ -569,31 +569,33 @@
 
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
 <script>
-
-
   document.addEventListener('DOMContentLoaded', function() {
       const checkoutForm = document.getElementById('checkoutForm');
       const orderMessage = document.getElementById('orderMessage');
       const cartCount = document.querySelector('.cart-count');
 
-      // Add event listener for the checkout form submission
+      // Enable Bootstrap custom validation styles
       checkoutForm.addEventListener('submit', async function(event) {
           event.preventDefault();
+          event.stopPropagation();
+
+          checkoutForm.classList.add('was-validated');
 
           const shippingAddress = document.getElementById('shippingAddress').value.trim();
           const paymentMethod = document.getElementById('paymentMethod').value;
 
-          if (!shippingAddress) {
-              orderMessage.className = 'alert alert-warning';
-              orderMessage.textContent = 'Please enter a shipping address';
-              orderMessage.classList.remove('d-none');
+          // Custom validation for shipping address
+          if (!shippingAddress || shippingAddress.length < 10) {
+              orderMessage.className = 'alert alert-warning d-block';
+              orderMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid shipping address (at least 10 characters).';
+              document.getElementById('shippingAddress').classList.add('is-invalid');
               return;
           }
 
           if (!paymentMethod) {
-              orderMessage.className = 'alert alert-warning';
-              orderMessage.textContent = 'Please select a payment method';
-              orderMessage.classList.remove('d-none');
+              orderMessage.className = 'alert alert-warning d-block';
+              orderMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select a payment method.';
+              document.getElementById('paymentMethod').classList.add('is-invalid');
               return;
           }
 
@@ -601,7 +603,7 @@
               const formData = new FormData(checkoutForm);
               const response = await fetch('/checkout', {
                   method: 'POST',
-                  body: new URLSearchParams(formData)
+                  body: formData // Send FormData directly
               });
 
               if (response.redirected) {
@@ -609,32 +611,37 @@
               } else {
                   const result = await response.text();
                   if (result.includes('success')) {
-                      orderMessage.className = 'alert alert-success';
-                      orderMessage.textContent = 'Order placed successfully!';
-                      orderMessage.classList.remove('d-none');
-                      updateCartCount();  // Update the cart count after successful order
+                      orderMessage.className = 'alert alert-success d-block';
+                      orderMessage.innerHTML = '<i class="fas fa-check-circle"></i> Order placed successfully!';
+                      updateCartCount();
                   } else {
-                      orderMessage.className = 'alert alert-danger';
-                      orderMessage.textContent = 'Failed to place order';
-                      orderMessage.classList.remove('d-none');
+                      orderMessage.className = 'alert alert-danger d-block';
+                      orderMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to place order';
                   }
               }
           } catch (error) {
               console.error('Error placing order:', error);
-              orderMessage.className = 'alert alert-danger';
-              orderMessage.textContent = 'An error occurred while placing your order';
-              orderMessage.classList.remove('d-none');
+              orderMessage.className = 'alert alert-danger d-block';
+              orderMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> An error occurred while placing your order';
           }
       });
 
-      // Fix for the cancel order functionality
-      const cancelOrderButton = document.querySelector('.btn-secondary');
+      // Clear invalid state on input
+      document.getElementById('shippingAddress').addEventListener('input', function() {
+          this.classList.remove('is-invalid');
+          orderMessage.classList.add('d-none');
+      });
 
+      document.getElementById('paymentMethod').addEventListener('change', function() {
+          this.classList.remove('is-invalid');
+          orderMessage.classList.add('d-none');
+      });
+
+      // Cancel order button
+      const cancelOrderButton = document.querySelector('.btn-secondary');
       if (cancelOrderButton) {
           cancelOrderButton.addEventListener('click', function(event) {
               event.preventDefault();
-
-              // Just redirect to the shop page as it's just a cancel button
               window.location.href = '/shop';
           });
       }
@@ -654,9 +661,6 @@
           }
       }
   });
-
-
-
 </script>
 </body>
 </html>

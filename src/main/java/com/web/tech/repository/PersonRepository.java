@@ -1,4 +1,4 @@
-package com.web.tech.Repository;
+package com.web.tech.repository;
 
 import com.web.tech.model.Person;
 import org.springframework.data.mongodb.repository.MongoRepository;

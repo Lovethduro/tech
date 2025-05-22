@@ -3,7 +3,7 @@ package com.web.tech.service;
 
 
 import com.web.tech.model.Person;
-import com.web.tech.Repository.PersonRepository;
+import com.web.tech.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

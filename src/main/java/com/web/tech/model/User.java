@@ -38,7 +38,7 @@ public class User implements Serializable {
 
     private String profileImageId;
 
-    private String role = "ADMIN"; // Default role
+    private String role = "USER"; // Default role
 
     private String address;
 

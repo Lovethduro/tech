@@ -421,7 +421,6 @@
         <thead>
         <tr>
           <th>Order Number</th>
-          <th>Date</th>
           <th>Total</th>
           <th>Status</th>
           <th>Actions</th>
@@ -430,7 +429,6 @@
         <tbody>
         <tr th:each="order : ${orders}">
           <td th:text="${order.orderNumber}"></td>
-          <td th:text="${order.orderDate != null} ? ${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')} : 'N/A'"></td>
           <td th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
           <td th:text="${order.status}"></td>
           <td>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -895,8 +895,8 @@
               <a th:href="@{/admin/products/edit/{id}(id=${artwork.id})}" class="artwork-action-btn" title="Edit">
                 <i class="fas fa-edit"></i>
               </a>
-              <button class="artwork-action-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                      th:attr="data-id=${artwork.id},data-name=${artwork.name},data-artist=${artwork.artist ?: 'Unknown'},data-price=${artwork.price != null ? #numbers.formatDecimal(artwork.price, 1, 2) : '0.00'}">
+              <button class="artwork-action-btn delete-btn" title="Delete"
+                      th:attr="data-id=${artwork.id},...">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </div>
@@ -972,134 +972,99 @@
 </footer>
 
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-// Replace your JavaScript with this:
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+   // Initialize modal but don't auto-show
+   const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+     show: false // Ensure it doesn't show automatically
+   });
 
-document.addEventListener('DOMContentLoaded', function() {
-// Initialize the modal
-const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-let currentArtworkId = null;
+   let currentArtworkId = null;
 
-// Handle delete button clicks
-document.addEventListener('click', function(e) {
-const deleteBtn = e.target.closest('[data-bs-target="#deleteModal"]');
-if (deleteBtn) {
-e.preventDefault();
-e.stopPropagation();
+   // Handle delete button clicks
+   document.addEventListener('click', function(e) {
+     const deleteBtn = e.target.closest('.delete-btn');
+     if (deleteBtn) {
+       e.preventDefault();
+       e.stopPropagation();
 
-// Get artwork data from button attributes
-currentArtworkId = deleteBtn.getAttribute('data-id');
-const artworkName = deleteBtn.getAttribute('data-name') || 'this artwork';
-const artist = deleteBtn.getAttribute('data-artist') || 'Unknown';
-const price = deleteBtn.getAttribute('data-price') || '0.00';
+       // Get artwork data
+       currentArtworkId = deleteBtn.getAttribute('data-id');
+       const artworkName = deleteBtn.getAttribute('data-name') || 'this artwork';
+       const artist = deleteBtn.getAttribute('data-artist') || 'Unknown';
+       const price = deleteBtn.getAttribute('data-price') || '0.00';
 
-// Update modal content
-document.getElementById('warning-message').textContent =
-`Are you sure you want to delete "${artworkName}" by ${artist}?`;
-document.getElementById('confirm-message').textContent =
-`Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
+       // Update modal content
+       document.getElementById('warning-message').textContent =
+         `Are you sure you want to delete "${artworkName}" by ${artist}?`;
+       document.getElementById('confirm-message').textContent =
+         `Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
 
-// Reset to first step
-showStep('warning');
+       // Reset to first step
+       showStep('warning');
 
-// Show modal
-deleteModal.show();
-}
-});
+       // Manually show the modal
+       deleteModal.show();
+     }
+   });
 
-// Proceed to confirmation step
-document.getElementById('proceedBtn').addEventListener('click', function() {
-showStep('confirm');
-});
+     // Proceed to confirmation step
+     document.getElementById('proceedBtn').addEventListener('click', function() {
+       showStep('confirm');
+     });
 
-// Go back to warning step
-document.getElementById('backBtn').addEventListener('click', function() {
-showStep('warning');
-});
+     // Go back to warning step
+     document.getElementById('backBtn').addEventListener('click', function() {
+       showStep('warning');
+     });
 
-// Handle delete confirmation
-document.getElementById('deleteConfirmBtn').addEventListener('click', function() {
-const deleteBtn = document.getElementById('deleteConfirmBtn');
-deleteBtn.disabled = true;
-deleteBtn.querySelector('.spinner').style.display = 'inline-block';
+     // Handle delete confirmation
+     document.getElementById('deleteConfirmBtn').addEventListener('click', function() {
+       const deleteBtn = document.getElementById('deleteConfirmBtn');
+       deleteBtn.disabled = true;
+       deleteBtn.querySelector('.spinner').style.display = 'inline-block';
 
-// Perform the GET request
-window.location.href = `/admin/products/delete/${currentArtworkId}`;
-});
+       // Perform the GET request
+       window.location.href = `/admin/products/delete/${currentArtworkId}`;
+     });
 
-// Show modal step
-function showStep(step) {
-document.querySelectorAll('.modal-step').forEach(el => {
-el.classList.remove('active');
-});
-document.getElementById(`step-${step}`).classList.add('active');
-document.getElementById(`step-${step}-buttons`).classList.add('active');
-}
+     // Show modal step function
+     function showStep(step) {
+       document.querySelectorAll('.modal-step').forEach(el => {
+         el.classList.remove('active');
+       });
+       document.getElementById(`step-${step}`).classList.add('active');
+       document.getElementById(`step-${step}-buttons`).classList.add('active');
+     }
 
-// Rest of your existing JavaScript (stock form, view toggle, etc.)
-// ...
-});
+     // View mode toggle
+     const viewBtns = document.querySelectorAll('.view-btn');
+     const artworkGrid = document.querySelector('.artwork-grid');
+     viewBtns.forEach(btn => {
+       btn.addEventListener('click', function() {
+         viewBtns.forEach(b => b.classList.remove('active'));
+         this.classList.add('active');
+         if (this.dataset.view === 'list') {
+           artworkGrid.classList.add('list');
+         } else {
+           artworkGrid.classList.remove('list');
+         }
+       });
+     });
 
-    // View mode toggle
-    const viewBtns = document.querySelectorAll('.view-btn');
-    const artworkGrid = document.querySelector('.artwork-grid');
-    viewBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        viewBtns.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        if (this.dataset.view === 'list') {
-          artworkGrid.classList.add('list');
-        } else {
-          artworkGrid.classList.remove('list');
-        }
-      });
-    });
+     // Sort functionality
+     document.getElementById('sort-select').addEventListener('change', function() {
+       const currentUrl = new URL(window.location.href);
+       currentUrl.searchParams.set('sort', this.value);
+       window.location.href = currentUrl.toString();
+     });
 
-    // Sort functionality
-    document.getElementById('sort-select').addEventListener('change', function() {
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set('sort', this.value);
-      window.location.href = currentUrl.toString();
-    });
-
-    // Show modal step
-    function showStep(step) {
-      document.querySelectorAll('.modal-step').forEach(el => {
-        el.classList.remove('active');
-      });
-      document.getElementById(`step-${step}`).classList.add('active');
-      document.getElementById(`step-${step}-buttons`).classList.add('active');
-    }
-
-    // Show toast notification
-    function showToast(type, message) {
-      const toastContainer = document.querySelector('.toast-container');
-      const toast = document.createElement('div');
-      toast.classList.add('toast', `toast-${type}`);
-      toast.setAttribute('role', 'alert');
-      toast.setAttribute('aria-live', 'assertive');
-      toast.setAttribute('aria-atomic', 'true');
-      toast.setAttribute('data-bs-autohide', 'true');
-      toast.setAttribute('data-bs-delay', '5000');
-      toast.innerHTML = `
-        <div class="toast-header">
-          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
-          <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">${message}</div>
-      `;
-      toastContainer.appendChild(toast);
-      const bsToast = new bootstrap.Toast(toast);
-      bsToast.show();
-      toast.addEventListener('hidden.bs.toast', () => toast.remove());
-    }
-
-    // Initialize toasts
-    document.querySelectorAll('.toast').forEach(toastEl => {
-      const toast = new bootstrap.Toast(toastEl);
-      toast.show();
-    });
-  });
+     // Initialize toasts
+     document.querySelectorAll('.toast').forEach(toastEl => {
+       const toast = new bootstrap.Toast(toastEl);
+       toast.show();
+     });
+   });
 </script>
 </body>
 </html>

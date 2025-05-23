@@ -49,7 +49,7 @@ public class CheckoutController {
         model.addAttribute("cart", cart);
         model.addAttribute("cartCount", cartService.getCartCount(user.getId()));
         model.addAttribute("shippingAddress", user.getAddress() != null ? user.getAddress() : "");
-        return "checkout";
+        return "admin/user/checkout";
     }
 
     @PostMapping("/checkout")
@@ -78,35 +78,35 @@ public class CheckoutController {
         if (cart == null || cart.getItems().isEmpty()) {
             logger.warn("Empty cart for user: {}", user.getId());
             redirectAttributes.addFlashAttribute("errorMessage", "Your cart is empty");
-            return "redirect:/cart";
+            return "redirect:admin/user/cart";
         }
 
         try {
             if (shippingAddress == null || shippingAddress.trim().isEmpty()) {
                 logger.error("Invalid shipping address for user: {}", user.getId());
                 redirectAttributes.addFlashAttribute("errorMessage", "Please enter a valid shipping address");
-                return "redirect:/checkout";
+                return "redirect:admin/user/checkout";
             }
 
             if (shippingAddress.length() < 10) {
                 logger.error("Shipping address too short for user: {}", user.getId());
                 redirectAttributes.addFlashAttribute("errorMessage", "Shipping address must be at least 10 characters");
-                return "redirect:/checkout";
+                return "redirect:admin/user/checkout";
             }
 
             Orders order = orderService.createOrder(user.getId(), cart, shippingAddress, paymentMethod);
             cartService.clearCart(user.getId());
             logger.info("Order placed successfully for user: {}", user.getId());
             redirectAttributes.addFlashAttribute("successMessage", "Order placed successfully!");
-            return "redirect:/order-confirmation";
+            return "redirect:admin/user/order-confirmation";
         } catch (IllegalArgumentException e) {
             logger.error("Checkout error for user: {}: {}", user.getId(), e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/checkout";
+            return "redirect:admin/user/checkout";
         } catch (Exception e) {
             logger.error("Unexpected error during checkout for user: {}: {}", user.getId(), e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to place order: " + e.getMessage());
-            return "redirect:/checkout";
+            return "redirect:admin/user/checkout";
         }
     }
 }

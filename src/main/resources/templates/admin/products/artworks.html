@@ -911,6 +911,7 @@
       </div>
     </div>
 
+    <!-- Replace your modal with this corrected version -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -934,16 +935,21 @@
               <button type="button" class="btn btn-danger" id="proceedBtn">Proceed</button>
             </div>
             <div class="modal-step w-100 d-flex justify-content-between" id="step-confirm-buttons">
-              <button class="artwork-action-btn delete-btn" title="Delete"
-                      th:attr="data-id=${artwork.id},data-name=${artwork.name},data-artist=${artwork.artist},data-price=${artwork.price}">
-                <i class="fas fa-trash-alt"></i>
+              <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+              <button type="button" class="btn btn-danger" id="deleteConfirmBtn">
+                <span class="spinner"></span>Delete Forever
               </button>
             </div>
-          </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- And fix your delete button in the artwork card -->
+    <button class="artwork-action-btn delete-btn" title="Delete"
+            th:attr="data-id=${artwork.id},data-name=${artwork.name ?: 'Unknown'},data-artist=${artwork.artist ?: 'Unknown'},data-price=${artwork.price ?: '0.00'}">
+      <i class="fas fa-trash-alt"></i>
+    </button>
 
     <div class="pagination" th:if="${page != null and page.totalPages != null and artworks != null and !artworks.isEmpty() and page.totalPages > 1}">
       <a th:href="@{/admin/artworks(page=${page.number > 0 ? page.number - 1 : 0}, size=${page.size ?: 10}, sort=${param.sort ?: 'name,asc'}, name=${param.name ?: ''}, minPrice=${param.minPrice ?: ''}, maxPrice=${param.maxPrice ?: ''})}"

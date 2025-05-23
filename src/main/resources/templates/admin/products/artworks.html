@@ -973,49 +973,83 @@
 </footer>
 
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-<script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize modal
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-      backdrop: 'static',
-      keyboard: false,
-      show: false
-    });
+            // Get modal element
+            const deleteModalElement = document.getElementById('deleteModal');
 
-    // Handle delete button clicks
-    document.querySelectorAll('[data-bs-target="#deleteModal"]').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const artworkId = this.getAttribute('data-id');
-        const artworkName = this.getAttribute('data-name') || 'this artwork';
-        const artist = this.getAttribute('data-artist') || 'Unknown';
-        const price = this.getAttribute('data-price') || '0.00';
-        document.getElementById('warning-message').textContent =
-          `Are you sure you want to delete "${artworkName}" by ${artist}?`;
-        document.getElementById('confirm-message').textContent =
-          `Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
-        document.getElementById('deleteForm').action = `/admin/products/delete/${artworkId}`;
-        showStep('warning');
-        deleteModal.show();
-      });
-    });
+            // Initialize Bootstrap modal (remove static backdrop and keyboard restrictions)
+            const deleteModal = new bootstrap.Modal(deleteModalElement, {
+                backdrop: true,  // Allow clicking backdrop to close
+                keyboard: true,  // Allow ESC key to close
+                focus: true
+            });
 
-    // Proceed to confirmation step
-    document.getElementById('proceedBtn').addEventListener('click', function() {
-      showStep('confirm');
-    });
+            // Handle delete button clicks
+            document.addEventListener('click', function(e) {
+                const deleteBtn = e.target.closest('[data-bs-target="#deleteModal"]');
+                if (deleteBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-    // Go back to warning step
-    document.getElementById('backBtn').addEventListener('click', function() {
-      showStep('warning');
-    });
+                    // Get artwork data from button attributes
+                    const artworkId = deleteBtn.getAttribute('data-id');
+                    const artworkName = deleteBtn.getAttribute('data-name') || 'this artwork';
+                    const artist = deleteBtn.getAttribute('data-artist') || 'Unknown';
+                    const price = deleteBtn.getAttribute('data-price') || '0.00';
 
-    // Handle delete form submission
-    document.getElementById('deleteForm').addEventListener('submit', function(e) {
-      const deleteBtn = document.getElementById('deleteConfirmBtn');
-      deleteBtn.disabled = true;
-      deleteBtn.querySelector('.spinner').style.display = 'inline-block';
-    });
+                    // Update modal content
+                    document.getElementById('warning-message').textContent =
+                        `Are you sure you want to delete "${artworkName}" by ${artist}?`;
+                    document.getElementById('confirm-message').textContent =
+                        `Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
+
+                    // Set form action
+                    document.getElementById('deleteForm').action = `/admin/products/delete/${artworkId}`;
+
+                    // Reset to first step
+                    showStep('warning');
+
+                    // Show modal
+                    deleteModal.show();
+                }
+            });
+
+            // Proceed to confirmation step
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                showStep('confirm');
+            });
+
+            // Go back to warning step
+            document.getElementById('backBtn').addEventListener('click', function() {
+                showStep('warning');
+            });
+
+            // Handle delete form submission
+            document.getElementById('deleteForm').addEventListener('submit', function(e) {
+                const deleteBtn = document.getElementById('deleteConfirmBtn');
+                deleteBtn.disabled = true;
+                deleteBtn.querySelector('.spinner').style.display = 'inline-block';
+            });
+
+            // Reset modal when hidden
+            deleteModalElement.addEventListener('hidden.bs.modal', function() {
+                showStep('warning');
+                const deleteBtn = document.getElementById('deleteConfirmBtn');
+                deleteBtn.disabled = false;
+                deleteBtn.querySelector('.spinner').style.display = 'none';
+            });
+
+            // Show modal step function
+            function showStep(step) {
+                // Hide all steps
+                document.querySelectorAll('.modal-step').forEach(el => {
+                    el.classList.remove('active');
+                });
+
+                // Show selected step
+                document.getElementById(`step-${step}`).classList.add('active');
+                document.getElementById(`step-${step}-buttons`).classList.add('active');
+            }
 
     // Handle stock form submissions
     document.querySelectorAll('.stock-form').forEach(form => {

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -861,6 +862,10 @@
 
         <h3>Quick Actions</h3>
         <div class="quick-actions">
+            <a th:href="@{/admin/products/add}" class="action-btn">
+                <i class="fas fa-plus"></i>
+                <span class="action-btn__title">Add Artworks</span>
+            </a>
             <a th:href="@{/admin/artworks}" class="action-btn">
                 <i class="fas fa-image"></i>
                 <span class="action-btn__title">Manage Artworks</span>

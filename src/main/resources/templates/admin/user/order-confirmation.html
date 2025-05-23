@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - Asian Art Gallery</title>
+  <title>Order Confirmation - Asian Art Gallery</title>
   <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
@@ -44,19 +44,17 @@
     body {
         background-color: var(--black-primary);
         color: var(--text-primary);
-        font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        font-family: 'Noto Serif SC', serif;
         line-height: 1.6;
         margin: 0;
         min-height: 100vh;
         font-size: var(--font-size-md);
     }
-    h1, h3 {
+    h1 {
         font-family: 'Playfair Display', serif;
         font-weight: 500;
-        margin-bottom: var(--space-md);
         color: var(--text-primary);
-    }
-    h1 {
+        margin-bottom: var(--space-md);
         font-size: var(--font-size-xl);
         display: flex;
         align-items: center;
@@ -65,131 +63,67 @@
         color: var(--gold-primary);
         margin-right: var(--space-sm);
         font-size: 1.8rem;
+        transition: var(--transition-fast);
     }
-    .container {
-        max-width: 1200px;
-        margin: var(--space-lg) auto;
-        padding: var(--space-lg);
-        background-color: var(--black-secondary);
-        border-radius: var(--border-radius-md);
-        border: 1px solid rgba(184, 134, 11, 0.15);
-        box-shadow: var(--shadow-sm);
+    h1 .title-icon:hover {
+        color: var(--gold-accent);
     }
     .header {
         background: linear-gradient(180deg, var(--black-secondary), var(--black-primary));
-        border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+        border-bottom: var(--border-width) solid rgba(184, 134, 11, 0.2);
         padding: var(--space-md) var(--space-lg);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         box-shadow: var(--shadow-sm);
         position: sticky;
         top: 0;
         z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
     }
     .header-brand {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
     }
     .header-brand .brand-logo {
         color: var(--gold-primary);
         font-size: 1.6rem;
         margin-right: var(--space-sm);
+        transition: var(--transition-fast);
     }
     .header-brand .brand-name {
         color: var(--text-primary);
         font-family: 'Playfair Display', serif;
         font-weight: 600;
         font-size: 1.3rem;
-        transition: var(--transition-fast);
         text-decoration: none;
-    }
-    .header-brand:hover .brand-name {
-        color: var(--gold-accent);
-    }
-    .header-nav {
-        display: flex;
-        gap: var(--space-md);
-    }
-    .header-nav a {
-        color: var(--text-secondary);
-        text-decoration: none;
-        font-size: var(--font-size-sm);
         transition: var(--transition-fast);
     }
-    .header-nav a:hover {
+    .header-brand:hover .brand-name,
+    .header-brand:hover .brand-logo {
         color: var(--gold-accent);
     }
     .header-right {
         display: flex;
         align-items: center;
         gap: var(--space-md);
+        flex-shrink: 0;
     }
-    .profile-dropdown {
-        position: relative;
-    }
-    .profile-trigger {
+    .nav-links {
         display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-        cursor: pointer;
+        gap: var(--space-md);
+        margin-right: var(--space-lg);
     }
-    .profile-picture {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 2px solid var(--gold-primary);
-        transition: var(--transition-fast);
-        position: relative;
-    }
-    .profile-picture img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .profile-trigger:hover .profile-picture {
-        border-color: var(--gold-accent);
-        transform: scale(1.05);
-    }
-    .dropdown-menu {
-        position: absolute;
-        right: 0;
-        top: 100%;
-        background-color: var(--black-primary);
-        border: 1px solid rgba(184, 134, 11, 0.2);
-        border-radius: var(--border-radius-md);
-        box-shadow: var(--shadow-lg);
-        min-width: 200px;
-        padding: var(--space-md);
-        display: none;
-        z-index: 1000;
-    }
-    .profile-dropdown:hover .dropdown-menu {
-        display: block;
-    }
-    .dropdown-header {
-        padding-bottom: var(--space-sm);
-        margin-bottom: var(--space-sm);
-        border-bottom: 1px solid rgba(184, 134, 11, 0.2);
-        font-weight: 600;
-        color: var(--gold-primary);
-    }
-    .dropdown-item {
-        padding: var(--space-sm) 0;
+    .nav-links a {
         color: var(--text-secondary);
         text-decoration: none;
-        display: block;
+        font-size: var(--font-size-sm);
+        font-weight: 500;
         transition: var(--transition-fast);
     }
-    .dropdown-item:hover {
-        color: var(--text-primary);
-        background-color: rgba(184, 134, 11, 0.1);
-    }
-    .dropdown-item i {
-        width: 20px;
-        text-align: center;
-        margin-right: var(--space-sm);
+    .nav-links a:hover {
+        color: var(--gold-accent);
     }
     .cart-icon {
         position: relative;
@@ -215,40 +149,52 @@
         justify-content: center;
         font-weight: bold;
     }
-    .form-label {
-        color: var(--text-primary);
-        font-weight: 500;
-        margin-bottom: var(--space-xs);
-        font-size: var(--font-size-sm);
-    }
-    .form-control {
+    .container {
+        max-width: 800px;
+        margin: var(--space-xl) auto;
+        padding: var(--space-lg);
         background-color: var(--black-secondary);
-        border: 1px solid rgba(184, 134, 11, 0.2);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-md);
+        text-align: center;
+    }
+    .confirmation-content {
+        padding: var(--space-lg);
+        border: var(--border-width) solid rgba(184, 134, 11, 0.2);
+        border-radius: var(--border-radius-md);
+        background-color: var(--black-primary);
+    }
+    .alert-success {
+        background-color: rgba(56, 142, 60, 0.1);
+        border-color: rgba(56, 142, 60, 0.2);
         color: var(--text-primary);
+        padding: var(--space-md);
+        margin-bottom: var(--space-lg);
         border-radius: var(--border-radius-sm);
-        padding: var(--space-sm) var(--space-md);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        font-size: var(--font-size-md);
+        animation: fadeIn 0.5s ease-in-out;
     }
-    .form-control:focus {
-        border-color: var(--gold-accent);
-        box-shadow: 0 0 5px rgba(218, 165, 32, 0.3);
+    .alert-success i {
+        color: var(--success);
+        font-size: 1.5rem;
     }
-    .form-control.is-invalid {
-        border-color: var(--danger);
-    }
-    .invalid-feedback {
-        color: var(--danger);
-        font-size: var(--font-size-sm);
-        margin-top: var(--space-xs);
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-10px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
     .btn {
         font-weight: 500;
         border-radius: var(--border-radius-sm);
-        padding: var(--space-sm) var(--space-md);
+        padding: var(--space-sm) var(--space-lg);
         transition: var(--transition-fast);
         font-size: var(--font-size-sm);
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        margin: var(--space-sm);
     }
     .btn-primary {
         background-color: var(--gold-primary);
@@ -258,46 +204,30 @@
     .btn-primary:hover {
         background-color: var(--gold-accent);
         border-color: var(--gold-accent);
+        transform: scale(1.05);
     }
-    .alert {
-        padding: var(--space-md);
-        margin-bottom: var(--space-md);
-        border: var(--border-width) solid transparent;
-        border-radius: var(--border-radius-sm);
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
+    .btn-secondary {
+        background-color: transparent;
+        border: 1px solid var(--gold-primary);
+        color: var(--gold-primary);
     }
-    .alert-success {
-        background-color: rgba(56, 142, 60, 0.1);
-        border-color: rgba(56, 142, 60, 0.2);
-        color: var(--text-primary);
+    .btn-secondary:hover {
+        background-color: rgba(184, 134, 11, 0.1);
+        color: var(--gold-accent);
+        border-color: var(--gold-accent);
+        transform: scale(1.05);
     }
-    .alert-danger {
-        background-color: rgba(198, 40, 40, 0.1);
-        border-color: rgba(198, 40, 40, 0.2);
-        color: var(--text-primary);
-    }
-    .alert-icon {
-        font-size: 1.25rem;
-        color: var(--success);
-    }
-    .alert-danger .alert-icon {
-        color: var(--danger);
-    }
-    .contact-info {
+    .confirmation-text {
         font-size: var(--font-size-md);
         color: var(--text-secondary);
         margin-bottom: var(--space-lg);
     }
-    .contact-info p {
-        margin-bottom: var(--space-sm);
-    }
     .footer {
         background-color: var(--black-secondary);
         padding: var(--space-lg);
-        border-top: 1px solid rgba(184, 134, 11, 0.2);
+        border-top: var(--border-width) solid rgba(184, 134, 11, 0.2);
         text-align: center;
+        margin-top: var(--space-xl);
     }
     .footer p {
         margin: 0;
@@ -320,10 +250,43 @@
     }
     @media (max-width: 768px) {
         .container {
+            margin: var(--space-lg) var(--space-md);
             padding: var(--space-md);
         }
-        .header-nav {
-            display: none;
+        .confirmation-content {
+            padding: var(--space-md);
+        }
+        .header {
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+        .header-right {
+            margin-left: auto;
+        }
+        .nav-links {
+            margin-right: var(--space-md);
+        }
+    }
+    @media (max-width: 576px) {
+        h1 {
+            font-size: var(--font-size-lg);
+        }
+        .btn {
+            padding: var(--space-xs) var(--space-md);
+            width: 100%;
+            margin: var(--space-xs) 0;
+        }
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .header-right {
+            margin-left: 0;
+            margin-top: var(--space-sm);
+        }
+        .nav-links {
+            flex-direction: column;
+            margin-right: 0;
         }
     }
   </style>
@@ -332,59 +295,48 @@
 <header class="header">
   <div class="header-brand">
     <i class="fas fa-paint-brush brand-logo"></i>
-    <a href="/" class="brand-name">Asian Art Gallery</a>
+    <a href="/shop" class="brand-name">Asian Art Gallery</a>
   </div>
-  <nav class="header-nav">
-    <a href="/shop">Shop</a>
-    <a href="/about">About</a>
-    <a href="/contact">Contact</a>
-  </nav>
   <div class="header-right">
-  </div>
+    <div class="nav-links">
+      <a href="/shop">Shop</a>
+      <a href="/cart">Cart</a>
+      <a href="/account">Account</a>
+    </div>
+    <a th:href="@{/cart}" class="cart-icon">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" th:text="${cartCount}">0</span>
+    </a>
   </div>
 </header>
+
 <main>
   <div class="container">
-    <h1>
-      <i class="fas fa-envelope title-icon"></i>
-      Contact Us
-    </h1>
-    <div class="contact-info">
-      <p><i class="fas fa-map-marker-alt"></i> 123 Art Street, Cultural District, City, Country</p>
-      <p><i class="fas fa-phone"></i> +1 (234) 567-8900</p>
-      <p><i class="fas fa-envelope"></i> contact@asianartgallery.com</p>
+    <div class="confirmation-content">
+      <h1>
+        <i class="fas fa-check-circle title-icon"></i>
+        Order Confirmation
+      </h1>
+      <div th:if="${success}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${success}"></span>
+      </div>
+      <p class="confirmation-text">
+        Thank you for your purchase! You'll receive an email confirmation soon.
+        Track your order status in your account or continue shopping.
+      </p>
+      <div class="confirmation-actions">
+        <a href="/shop" class="btn btn-primary">
+          <i class="fas fa-shopping-bag"></i> Continue Shopping
+        </a>
+        <a href="/account/orders" class="btn btn-secondary">
+          <i class="fas fa-list"></i> View Orders
+        </a>
+      </div>
     </div>
-    <form id="contactForm" class="mt-4">
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" id="name" name="name" class="form-control" required>
-        <div class="invalid-feedback">
-          Please enter your name.
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" class="form-control" required>
-        <div class="invalid-feedback">
-          Please enter a valid email address.
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="message" class="form-label">Message</label>
-        <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
-        <div class="invalid-feedback">
-          Please enter your message.
-        </div>
-      </div>
-      <div class="text-end">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-paper-plane"></i> Send Message
-        </button>
-      </div>
-    </form>
-    <div id="contactMessage" class="alert d-none"></div>
   </div>
 </main>
+
 <footer class="footer">
   <div class="container">
     <p>© 2025 Asian Art Gallery. All rights reserved.</p>
@@ -395,11 +347,10 @@
     </div>
   </div>
 </footer>
+
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      const contactForm = document.querySelector('#contactForm');
-      const contactMessage = document.querySelector('#contactMessage');
       const cartCount = document.querySelector('.cart-count');
 
       async function updateCartCount() {
@@ -408,71 +359,16 @@
               if (response.ok) {
                   const count = await response.text();
                   cartCount.textContent = count;
+              } else {
+                  cartCount.textContent = '0';
               }
           } catch (error) {
               console.error('Error fetching cart count:', error);
+              cartCount.textContent = '0';
           }
       }
+
       updateCartCount();
-
-      contactForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          const name = document.querySelector('#name');
-          const email = document.querySelector('#email');
-          const message = document.querySelector('#message');
-
-          // Reset validation states
-          name.classList.remove('is-invalid');
-          email.classList.remove('is-invalid');
-          message.classList.remove('is-invalid');
-
-          let isValid = true;
-          if (!name.value.trim()) {
-              name.classList.add('is-invalid');
-              isValid = false;
-          }
-          if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-              email.classList.add('is-invalid');
-              isValid = false;
-          }
-          if (!message.value.trim()) {
-              message.classList.add('is-invalid');
-              isValid = false;
-          }
-
-          if (!isValid) {
-              return;
-          }
-
-          try {
-              const response = await fetch('/contact', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                  body: `name=${encodeURIComponent(name.value.trim())}&email=${encodeURIComponent(email.value.trim())}&message=${encodeURIComponent(message.value.trim())}`
-              });
-              const result = await response.text();
-              if (result.startsWith('success')) {
-                  contactMessage.className = 'alert alert-success';
-                  contactMessage.innerHTML = '<i class="fas fa-check-circle alert-icon"></i> ' + result.substring(8);
-                  contactMessage.classList.remove('d-none');
-                  contactForm.reset();
-                  setTimeout(() => {
-                      contactMessage.classList.add('d-none');
-                  }, 5000);
-              } else {
-                  contactMessage.className = 'alert alert-danger';
-                  contactMessage.innerHTML = '<i class="fas fa-exclamation-circle alert-icon"></i> ' + result.substring(6);
-                  contactMessage.classList.remove('d-none');
-              }
-          } catch (error) {
-              console.error('Error submitting contact form:', error);
-              contactMessage.className = 'alert alert-danger';
-              contactMessage.innerHTML = '<i class="fas fa-exclamation-circle alert-icon"></i> Failed to send message';
-              contactMessage.classList.remove('d-none');
-          }
-      });
   });
 </script>
 </body>

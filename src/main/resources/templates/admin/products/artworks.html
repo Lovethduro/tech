@@ -934,9 +934,9 @@
               <button type="button" class="btn btn-danger" id="proceedBtn">Proceed</button>
             </div>
             <div class="modal-step w-100 d-flex justify-content-between" id="step-confirm-buttons">
-              <button type="button" class="btn btn-secondary" id="backBtn">Go Back</button>
-              <button type="button" class="btn btn-danger" id="deleteConfirmBtn">
-                <span class="spinner"></span>Delete
+              <button class="artwork-action-btn delete-btn" title="Delete"
+                      th:attr="data-id=${artwork.id},data-name=${artwork.name},data-artist=${artwork.artist},data-price=${artwork.price}">
+                <i class="fas fa-trash-alt"></i>
               </button>
             </div>
           </div>

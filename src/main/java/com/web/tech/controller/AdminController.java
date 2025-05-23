@@ -227,4 +227,32 @@ public class AdminController {
         }
         return "redirect:/admin/orders";
     }
+
+    @PostMapping("/products/delete/{id}")
+    public String deleteProduct(
+            @PathVariable("id") String id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Products product = productService.getProductById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found: " + id));
+            productService.deleteById(id);
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User admin = userService.findByEmail(auth.getName().toLowerCase());
+            notificationService.createNotification(
+                    "Artwork Deleted",
+                    "Artwork '" + product.getName() + "' was successfully deleted.",
+                    "SUCCESS",
+                    admin
+            );
+            redirectAttributes.addFlashAttribute("successMessage", "Artwork deleted successfully!");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error deleting product id: {}. Message: {}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            logger.error("Unexpected error deleting product id: {}", id, e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete artwork: " + e.getMessage());
+        }
+        return "redirect:/admin/artworks";
+    }
 }

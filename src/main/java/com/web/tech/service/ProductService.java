@@ -177,4 +177,11 @@ public class ProductService {
     public Page<Products> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
+    public void deleteById(String id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Product not found: " + id);
+        }
+        productRepository.deleteById(id);
+    }
 }

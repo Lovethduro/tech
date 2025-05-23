@@ -935,12 +935,11 @@
             </div>
             <div class="modal-step w-100 d-flex justify-content-between" id="step-confirm-buttons">
               <button type="button" class="btn btn-secondary" id="backBtn">Go Back</button>
-              <form id="deleteForm" method="post">
-                <button type="submit" class="btn btn-danger" id="deleteConfirmBtn">
-                  <span class="spinner"></span>Delete
-                </button>
-              </form>
+              <button type="button" class="btn btn-danger" id="deleteConfirmBtn">
+                <span class="spinner"></span>Delete
+              </button>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -973,128 +972,72 @@
 </footer>
 
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-  document.addEventListener('DOMContentLoaded', function() {
-            // Get modal element
-            const deleteModalElement = document.getElementById('deleteModal');
+// Replace your JavaScript with this:
 
-            // Initialize Bootstrap modal (remove static backdrop and keyboard restrictions)
-            const deleteModal = new bootstrap.Modal(deleteModalElement, {
-                backdrop: true,  // Allow clicking backdrop to close
-                keyboard: true,  // Allow ESC key to close
-                focus: true
-            });
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize the modal
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+let currentArtworkId = null;
 
-            // Handle delete button clicks
-            document.addEventListener('click', function(e) {
-                const deleteBtn = e.target.closest('[data-bs-target="#deleteModal"]');
-                if (deleteBtn) {
-                    e.preventDefault();
-                    e.stopPropagation();
+// Handle delete button clicks
+document.addEventListener('click', function(e) {
+const deleteBtn = e.target.closest('[data-bs-target="#deleteModal"]');
+if (deleteBtn) {
+e.preventDefault();
+e.stopPropagation();
 
-                    // Get artwork data from button attributes
-                    const artworkId = deleteBtn.getAttribute('data-id');
-                    const artworkName = deleteBtn.getAttribute('data-name') || 'this artwork';
-                    const artist = deleteBtn.getAttribute('data-artist') || 'Unknown';
-                    const price = deleteBtn.getAttribute('data-price') || '0.00';
+// Get artwork data from button attributes
+currentArtworkId = deleteBtn.getAttribute('data-id');
+const artworkName = deleteBtn.getAttribute('data-name') || 'this artwork';
+const artist = deleteBtn.getAttribute('data-artist') || 'Unknown';
+const price = deleteBtn.getAttribute('data-price') || '0.00';
 
-                    // Update modal content
-                    document.getElementById('warning-message').textContent =
-                        `Are you sure you want to delete "${artworkName}" by ${artist}?`;
-                    document.getElementById('confirm-message').textContent =
-                        `Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
+// Update modal content
+document.getElementById('warning-message').textContent =
+`Are you sure you want to delete "${artworkName}" by ${artist}?`;
+document.getElementById('confirm-message').textContent =
+`Are you absolutely sure you want to delete "${artworkName}" by ${artist} priced at $${price}?`;
 
-                    // Set form action
-                    document.getElementById('deleteForm').action = `/admin/products/delete/${artworkId}`;
+// Reset to first step
+showStep('warning');
 
-                    // Reset to first step
-                    showStep('warning');
+// Show modal
+deleteModal.show();
+}
+});
 
-                    // Show modal
-                    deleteModal.show();
-                }
-            });
+// Proceed to confirmation step
+document.getElementById('proceedBtn').addEventListener('click', function() {
+showStep('confirm');
+});
 
-            // Proceed to confirmation step
-            document.getElementById('proceedBtn').addEventListener('click', function() {
-                showStep('confirm');
-            });
+// Go back to warning step
+document.getElementById('backBtn').addEventListener('click', function() {
+showStep('warning');
+});
 
-            // Go back to warning step
-            document.getElementById('backBtn').addEventListener('click', function() {
-                showStep('warning');
-            });
+// Handle delete confirmation
+document.getElementById('deleteConfirmBtn').addEventListener('click', function() {
+const deleteBtn = document.getElementById('deleteConfirmBtn');
+deleteBtn.disabled = true;
+deleteBtn.querySelector('.spinner').style.display = 'inline-block';
 
-            // Handle delete form submission
-            document.getElementById('deleteForm').addEventListener('submit', function(e) {
-                const deleteBtn = document.getElementById('deleteConfirmBtn');
-                deleteBtn.disabled = true;
-                deleteBtn.querySelector('.spinner').style.display = 'inline-block';
-            });
+// Perform the GET request
+window.location.href = `/admin/products/delete/${currentArtworkId}`;
+});
 
-            // Reset modal when hidden
-            deleteModalElement.addEventListener('hidden.bs.modal', function() {
-                showStep('warning');
-                const deleteBtn = document.getElementById('deleteConfirmBtn');
-                deleteBtn.disabled = false;
-                deleteBtn.querySelector('.spinner').style.display = 'none';
-            });
+// Show modal step
+function showStep(step) {
+document.querySelectorAll('.modal-step').forEach(el => {
+el.classList.remove('active');
+});
+document.getElementById(`step-${step}`).classList.add('active');
+document.getElementById(`step-${step}-buttons`).classList.add('active');
+}
 
-            // Show modal step function
-            function showStep(step) {
-                // Hide all steps
-                document.querySelectorAll('.modal-step').forEach(el => {
-                    el.classList.remove('active');
-                });
-
-                // Show selected step
-                document.getElementById(`step-${step}`).classList.add('active');
-                document.getElementById(`step-${step}-buttons`).classList.add('active');
-            }
-
-    // Handle stock form submissions
-    document.querySelectorAll('.stock-form').forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const stockInput = this.querySelector('.stock-input');
-        const stockBtn = this.querySelector('.stock-btn');
-        const stockValue = parseInt(stockInput.value);
-
-        // Client-side validation
-        if (isNaN(stockValue) || stockValue < 0) {
-          showToast('error', 'Please enter a valid stock value (0 or greater).');
-          return;
-        }
-
-        stockBtn.disabled = true;
-        stockBtn.querySelector('.spinner').style.display = 'inline-block';
-
-        // Submit form via fetch
-        fetch(this.action, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `stock=${stockValue}`
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to update stock');
-          }
-          return response.text();
-        })
-        .then(() => {
-          showToast('success', 'Stock updated successfully!');
-          setTimeout(() => window.location.reload(), 1000);
-        })
-        .catch(error => {
-          showToast('error', error.message);
-        })
-        .finally(() => {
-          stockBtn.disabled = false;
-          stockBtn.querySelector('.spinner').style.display = 'none';
-        });
-      });
-    });
+// Rest of your existing JavaScript (stock form, view toggle, etc.)
+// ...
+});
 
     // View mode toggle
     const viewBtns = document.querySelectorAll('.view-btn');

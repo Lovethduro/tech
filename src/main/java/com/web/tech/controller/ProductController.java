@@ -109,7 +109,7 @@ public class ProductController {
         return "admin/products/artworks";
     }
 
-    @PostMapping("/products/delete/{id}")
+    @GetMapping("/products/delete/{id}")
     public String deleteProduct(
             @PathVariable("id") String id,
             RedirectAttributes redirectAttributes) {

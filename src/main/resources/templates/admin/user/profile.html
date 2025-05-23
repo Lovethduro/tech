@@ -368,34 +368,9 @@
           <div class="dropdown-stat-icon">
             <i class="fas fa-shopping-bag"></i>
           </div>
-          <div class="dropdown-stat-content">
-            <a href="/orders" class="dropdown-stat-value" th:text="${orderCount != null ? orderCount : 0}">0</a>
-            <span class="dropdown-stat-label">Orders</span>
-          </div>
-        </div>
-        <div class="dropdown-stat">
-          <div class="dropdown-stat-icon">
-            <i class="fas fa-heart"></i>
-          </div>
-          <div class="dropdown-stat-content">
-            <a href="/wishlist" class="dropdown-stat-value" th:text="${wishlistCount != null ? wishlistCount : 0}">0</a>
-            <span class="dropdown-stat-label">Wishlist</span>
-          </div>
-        </div>
-        <div class="dropdown-stat">
-          <div class="dropdown-stat-icon">
-            <i class="fas fa-credit-card"></i>
-          </div>
-          <div class="dropdown-stat-content">
-            <a href="/total-spent" class="dropdown-stat-value" th:text="${totalSpent != null ? '$' + totalSpent : '$0'}">$0</a>
-            <span class="dropdown-stat-label">Total Spent</span>
-          </div>
         </div>
         <a href="/account" class="dropdown-item">
           <i class="fas fa-user"></i> My Account
-        </a>
-        <a href="/settings" class="dropdown-item">
-          <i class="fas fa-cog"></i> Settings
         </a>
         <a th:href="@{/logout}" class="dropdown-item">
           <i class="fas fa-sign-out-alt"></i> Logout

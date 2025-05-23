@@ -423,7 +423,6 @@
           <th>Order Number</th>
           <th>Total</th>
           <th>Status</th>
-          <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -431,16 +430,7 @@
           <td th:text="${order.orderNumber}"></td>
           <td th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
           <td th:text="${order.status}"></td>
-          <td>
-            <a th:href="@{'/account/orders/' + ${order.orderNumber}}" class="btn btn-primary">
-              <i class="fas fa-eye"></i> View
-            </a>
-            <form th:if="${order.status == 'PENDING'}" th:action="@{'/account/orders/cancel/' + ${order.orderNumber}}" method="post" style="display:inline;">
-              <button type="submit" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Cancel
-              </button>
-            </form>
-          </td>
+
         </tr>
         </tbody>
       </table>

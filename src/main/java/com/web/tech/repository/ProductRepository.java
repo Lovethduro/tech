@@ -36,6 +36,6 @@ public interface ProductRepository extends MongoRepository<Products, String> {
     @Query(value = "{ 'category': ?0 }", count = true)
     Long countByCategory(String category);
 
-    @Query("{ stock: { $lte: ?0 } }")
+    @Query(value = "{ stock: { $lte: ?0 } }", count = true)
     Long countByStockLessThanEqual(int stock);
 }
